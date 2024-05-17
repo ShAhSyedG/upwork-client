@@ -3,7 +3,7 @@ name: Branch Management
 on:
   push:
     branches:
-      -  'dev'
+      -  'main'
       -  'release/*'
       -  'hotfix/*'
 
