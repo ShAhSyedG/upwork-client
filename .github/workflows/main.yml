@@ -5,6 +5,12 @@ permissions:
   pull-requests: write # Add this optional for allowing the action to make a comment of acknowledgment on the PR
 
 on:
+  push:
+    branches:
+      - main
+      - dev
+      - staging
+      
   pull_request:
     branches:
       - master
@@ -15,7 +21,8 @@ on:
       - opened
       - reopened
       - synchronize
-
+  release:
+    types: [published]
 jobs:
   merge-pr:
     runs-on: ubuntu-latest
@@ -28,3 +35,42 @@ jobs:
       uses: solenova-tech/gamma@v1.3.1 # replace version with latest from https://github.com/marketplace/actions/gamma-ci-made-easy
       with:
         target-branch: 'dev' # replace this name with your testing branch
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+        
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Create release
+        run: npm run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
