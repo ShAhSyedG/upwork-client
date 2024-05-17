@@ -3,9 +3,9 @@ name: Branch Management
 on:
   push:
     branches:
-      -  'main'
-      -  'release/*'
-      -  'hotfix/*'
+      - develop
+      - 'release/*'
+      - 'hotfix/*'
 
 jobs:
   create_release_pr:
@@ -19,7 +19,7 @@ jobs:
             const { context, GitHub } = require('@actions/github');
             const octokit = new GitHub(process.env.GITHUB_TOKEN);
             const { owner, repo } = context.repo;
-            const branch = context.ref.replace('refs/heads/', '');
+            const branch = process.env.GITHUB_REF.replace('refs/heads/', '');
             let targetBranch;
 
             if (branch.startsWith('release/')) {
