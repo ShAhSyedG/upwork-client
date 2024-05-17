@@ -1,56 +1,30 @@
-name: Auto Merge PR
+name: Merge PR to Testing Branch
+
+permissions:
+  contents: write # for pushing the code back to your desired branch
+  pull-requests: write # Add this optional for allowing the action to make a comment of acknowledgment on the PR
 
 on:
-  push:
-    branches:
-      - main
-      - master
-      - dev
-      - 'feature/*'
-      - 'fix/*'
-      - 'hotfix/*'
-      
   pull_request:
-    types: [closed]
+    branches:
+      - master
+      - main
+      - dev
+      - staging
+    types:
+      - opened
+      - reopened
+      - synchronize
 
 jobs:
-  merge_pr:
+  merge-pr:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+    - name: Checks out code
+      uses: actions/checkout@v3
 
-    - name: Merge PR into main branch
-      if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
-      run: |
-        git fetch origin
-        git checkout main
-        git merge --no-ff ${{ github.event.pull_request.head.ref }} -m "Merge pull request #${{ github.event.pull_request.number }}"
-
-    - name: Merge PR into dev branch
-      if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'dev'
-      run: |
-        git fetch origin
-        git checkout dev
-        git merge --no-ff ${{ github.event.pull_request.head.ref }} -m "Merge pull request #${{ github.event.pull_request.number }}"
-
-  create_release:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Create release branch
-      run: |
-        # Extract branch name
-        BRANCH_NAME=$(echo $GITHUB_REF | cut -d '/' -f 2)
-        git checkout -b release/$BRANCH_NAME
-
-    - name: Create PR for release
-      uses: peter-evans/create-pull-request@v3
+    - name: Merge PR to Testing Branch
+      uses: solenova-tech/gamma@v1.3.1 # replace version with latest from https://github.com/marketplace/actions/gamma-ci-made-easy
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        title: "Release PR: ${{ github.event.head_ref }}"
-        labels: 'release'
-        body: "Automatically generated PR for upcoming release."
-        branch: "release/${{ github.event.head_ref }}"
+        target-branch: 'dev' # replace this name with your testing branch
