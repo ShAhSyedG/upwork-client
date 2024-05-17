@@ -1,0 +1,42 @@
+name: Branch Management
+
+on:
+  push:
+    branches:
+      -  'dev'
+      -  'release/*'
+      -  'hotfix/*'
+
+jobs:
+  create_release_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Release PR
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { context, GitHub } = require('@actions/github');
+            const octokit = new GitHub(process.env.GITHUB_TOKEN);
+            const { owner, repo } = context.repo;
+            const branch = context.ref.replace('refs/heads/', '');
+            let targetBranch;
+
+            if (branch.startsWith('release/')) {
+              // Find next version based on branch name
+              const version = branch.replace('release/', '');
+              targetBranch = 'main'; // Adjust if needed
+            } else if (branch.startsWith('hotfix/')) {
+              targetBranch = 'main';
+            } else {
+              return; // Not a release or hotfix branch
+            }
+
+            const { data: pr } = await octokit.rest.pulls.create({
+              owner,
+              repo,
+              title: `Release PR for ${branch}`,
+              base: targetBranch,
+              head: branch,
+            });
+            console.log(`Created PR ${pr.html_url}`);
