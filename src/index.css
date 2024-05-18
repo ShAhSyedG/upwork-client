@@ -1,0 +1,224 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&family=Rubik:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
+
+:root {
+  --color-primary: #176b87;
+  --action-font-weight: 600;
+  --action-text-color: #565656;
+}
+
+.font-mono {
+  font-family: 'Space Mono', monospace;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0px;
+  padding: 0px;
+  color: #343a40;
+  background: #fbfbfb;
+  overflow-x: hidden;
+}
+
+.green {
+  background-color: #d1fae5;
+}
+
+.ant-page-header {
+  /* background: #fff; */
+  padding-block: 10px;
+}
+
+.ant-page-header .ant-tabs-nav {
+  margin-bottom: -20px;
+}
+.ant-page-header .ant-tabs-nav::before {
+  border: none !important;
+}
+.ant-page-header-footer {
+  margin-block-start: 0px !important;
+}
+
+.ant-menu-title-content {
+  font-weight: var(--action-font-weight);
+  color: var(--action-text-color);
+}
+
+.ant-btn {
+  font-weight: var(--action-font-weight);
+  box-shadow: none !important;
+}
+
+.ant-tabs-tab-btn {
+  font-weight: var(--action-font-weight);
+  color: var(--action-text-color);
+}
+
+.page-loader {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.page-loader > div {
+  padding: 0px !important;
+}
+
+/* Form */
+.ant-input {
+  background: #f1f1f1;
+  border: none;
+  /* padding: 8px 10px; */
+}
+.ant-picker {
+  background: #f1f1f1;
+  border: none;
+}
+.ant-form-item-label {
+  font-weight: 600;
+  padding: 0px !important;
+  text-align: start !important;
+}
+.ant-form-item {
+  margin-bottom: 10px !important;
+}
+
+/* Stepper */
+.ant-steps-item-title {
+  font-size: 14px !important;
+}
+
+.election-item .ant-card-meta-title {
+  margin-bottom: 0px !important;
+}
+
+.election-item .ant-card-body {
+  padding: 14px !important;
+}
+
+.ant-list-item-meta {
+  align-items: center !important;
+}
+
+.election-item-2 {
+  cursor: pointer;
+}
+.election-item-2 + .election-item-2 {
+  margin-top: 0.5rem;
+}
+.election-item-2 .ant-descriptions-item {
+  padding-bottom: 0px !important;
+}
+
+/* .election-item-2{
+  background: #fff;
+  padding: 1rem !important;
+
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+
+
+.election-item-2 .ant-list-item-meta{
+  width: 100%;
+}
+
+.election-item-2 .title{
+  margin-top: 0px;
+} */
+
+/* #e5e7eb */
+
+.sub-sidebar {
+  background: transparent;
+  border: none !important;
+}
+
+.ant-menu-item-selected {
+  background: #e5e7eb !important;
+}
+
+.ant-layout-header {
+  background: #fff;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.ant-layout-header .logo {
+  margin-right: 1rem;
+}
+
+/* Home Layout */
+.home-layout {
+  height: 100vh;
+  overflow-y: scroll;
+}
+.home-layout .home-menu {
+  background: transparent;
+  flex: 1;
+  border-bottom: none !important;
+}
+
+.home-layout .ant-page-header {
+  background: transparent;
+  padding-inline: 0px;
+  margin-bottom: 2em;
+}
+
+/* Layout: Auth */
+.auth-layout {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-elections-filter .ant-tabs-nav {
+  width: 100%;
+}
+
+.home-elections-filter .ant-card-body {
+  padding: 0.8em 0em;
+  overflow: hidden;
+}
+
+.home-elections-filter .ant-tabs-content-holder {
+  border-left: none;
+}
+.home-elections-filter .ant-tabs-tab {
+  margin: 0px !important;
+}
+
+.candidate-card {
+  border: none;
+  padding: 0px;
+  border: 2px solid transparent;
+}
+
+.candidate-card .ant-card-body {
+  padding: 0.5em;
+}
+
+.organization-dashboard .ant-layout-sider-children {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+.organization-dashboard .org-name {
+  border-top: 1px solid #f5f5f5;
+  margin: 0px;
+  font-weight: 700;
+  padding: 1em;
+}
+
+.filter-card .ant-card-body {
+  /* padding: 0.1em 0em; */
+
+  padding-block: 0.5em;
+}
