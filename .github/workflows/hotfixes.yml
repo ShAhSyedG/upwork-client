@@ -1,10 +1,10 @@
-name: Create Feature Branch
+name: Create Feature/Fix/Hotfix Branch
 
 on:
   push:
     branches:
       - 'main'
-      - 'dev'
+      - 'development'
 
 jobs:
   create-branch:
@@ -14,9 +14,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Create new branch
+      - name: Set up Git
         run: |
-          BRANCH_TYPE=${{ github.event.head_commit.message }}
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Determine Branch Type and Create Branch
+        run: |
+          BRANCH_TYPE=$(echo "${{ github.event.head_commit.message }}" | awk '{print tolower($1)}')
           NEW_BRANCH="${BRANCH_TYPE}/${{ github.sha }}"
           git checkout -b $NEW_BRANCH
           git push origin $NEW_BRANCH
