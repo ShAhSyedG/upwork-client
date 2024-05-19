@@ -21,12 +21,14 @@ jobs:
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-        env:
-          GITHUB_TOKEN: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
-
+      
       - name: Determine Branch Type and Create Branch
         run: |
-          BRANCH_TYPE=$(echo "${{ github.event.head_commit.message }}" | awk '{print tolower($1)}')
-          NEW_BRANCH="${BRANCH_TYPE}/${{ github.sha }}"
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          BRANCH_TYPE=$(echo "$COMMIT_MSG" | awk '{print tolower($1)}')
+          BRANCH_NAME=$(echo "$COMMIT_MSG" | sed 's/[^a-zA-Z0-9]/-/g' | awk '{print tolower($0)}')
+          NEW_BRANCH="${BRANCH_TYPE}/${BRANCH_NAME}-${{ github.sha }}"
           git checkout -b $NEW_BRANCH
           git push origin $NEW_BRANCH
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
