@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - 'main'
-      - 'development'
+      - 'dev'
 
 jobs:
   create-branch:
