@@ -39,8 +39,8 @@ jobs:
 
       - name: Set up Git
         run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "GitHub Actions"
+          git config --global user.email "shahsyed216@gmail.com"
+          git config --global user.name "ShAhSyedG"
 
       - name: Merge push branch into main
         run: |
