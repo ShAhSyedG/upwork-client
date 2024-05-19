@@ -4,13 +4,7 @@ permissions:
   contents: write # for pushing the code back to your desired branch
   pull-requests: write # Add this optional for allowing the action to make a comment of acknowledgment on the PR
 
-on:
-  push:
-    branches:
-      - main
-      - dev
-      - staging
-      
+on:      
   pull_request:
     branches:
       - master
