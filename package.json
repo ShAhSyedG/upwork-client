@@ -45,4 +45,7 @@
   "devDependencies": {
     "prettier": "3.0.3"
   }
+   "scripts": {
+    "release": "standard-version"
+  } 
 }
