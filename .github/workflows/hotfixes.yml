@@ -47,11 +47,13 @@ jobs:
           git checkout main
           git merge --no-ff ${{ github.ref }}
           git push origin main
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Merge push branch into dev
         run: |
           git checkout dev
           git merge --no-ff ${{ github.ref }}
           git push origin dev
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
