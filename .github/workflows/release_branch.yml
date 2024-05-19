@@ -1,0 +1,36 @@
+# .github/workflows/create-pull-request.yml
+name: Create Pull Requests for Release Branches
+
+on:
+  push:
+    branches:
+      - 'release/*'
+
+jobs:
+  create-pull-requests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create PR to Develop
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: develop
+          title: "Release: ${{ github.ref }}"
+          body: "Automated pull request for release branch `${{ github.ref }}` into `develop`."
+
+      - name: Create PR to Main
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+          title: "Release: ${{ github.ref }}"
+          body: "Automated pull request for release branch `${{ github.ref }}` into `main`."
