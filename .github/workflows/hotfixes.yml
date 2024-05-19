@@ -1,4 +1,4 @@
-name: Create Feature/Fix/Hotfix Branch
+name: Create Hotfix/Feature/Fix Branch 
 
 permissions:
   contents: write # for pushing the code back to your desired branch
