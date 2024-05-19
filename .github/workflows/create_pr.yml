@@ -1,23 +1,37 @@
-name: Create Pull Request
+name: Auto Create Pull Requests
+
 on:
   push:
-    branches:
-      - 'release/*'
-      - main
-      - dev
+    branches-ignore:
+      - 'main'
+      - 'dev'
 
 jobs:
-  create_pr:
+  auto-pr:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create Pull Request to Develop
+        uses: peter-evans/create-pull-request@v5
         with:
-          branch: ${{ github.ref }}
-          base: main
-          title: "Release: ${{ github.ref }}"
-          body: "This is an automated pull request for release branch ${{ github.ref }}."
-          labels: release
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          branch: dev
+          title: "Auto PR to Dev: ${GITHUB_REF##*/}"
+          body: |
+            This pull request is automatically generated from branch `${GITHUB_REF##*/}` to `develop`.
+
+      - name: Create Pull Request to Main
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          branch: main
+          title: "Auto PR to Main: ${GITHUB_REF##*/}"
+          body: |
+            This pull request is automatically generated from branch `${GITHUB_REF##*/}` to `main`.
