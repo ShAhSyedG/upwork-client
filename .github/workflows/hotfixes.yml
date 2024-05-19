@@ -1,5 +1,8 @@
 name: Create Feature/Fix/Hotfix Branch
 
+permissions:
+  contents: write # for pushing the code back to your desired branch
+  
 on:
   push:
     branches:
