@@ -1,67 +1,22 @@
-name: Hotfix Branch Workflow
+name: Create Feature Branch
 
 on:
   push:
     branches:
-      - 'hotfix/**'
-      - 'feature/**'
-      - 'fix/**'
+      - 'main'
+      - 'dev'
+
 jobs:
-  build:
+  create-branch:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run lint
-        run: npm run lint
-
-      - name: Run tests
-        run: npm test
-
-  merge:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Git
+      - name: Create new branch
         run: |
-          git config --global user.email "shahsyed216@gmail.com"
-          git config --global user.name "ShAhSyedG"
-      
-      - name: Check git remote
-        run: |
-          git remote -v
-
-      - name: Set git remote URL
-        run: |
-          git remote set-url origin https://ShAhSyedG:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/ShAhSyedG/upwork-client.git
-      
-      - name: Merge push branch into main
-        run: |
-          git checkout main
-          git merge --no-ff ${{ github.ref }}
-          git push origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-
-      - name: Merge push branch into dev
-        run: |
-          git checkout dev
-          git merge --no-ff ${{ github.ref }}
-          git push origin dev
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          BRANCH_TYPE=${{ github.event.head_commit.message }}
+          NEW_BRANCH="${BRANCH_TYPE}/${{ github.sha }}"
+          git checkout -b $NEW_BRANCH
+          git push origin $NEW_BRANCH
