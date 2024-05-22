@@ -63,10 +63,11 @@ jobs:
     - name: Push changes
       uses: actions/github-script@v6
       with:
-        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         script: |
           const { execSync } = require('child_process');
           execSync('git push origin main');
+      env:
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
     - name: Merge dev to main
       run: |
