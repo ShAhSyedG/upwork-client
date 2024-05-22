@@ -1,67 +1,34 @@
-name: Hotfix Branch Workflow
+name: Create Hotfix/Feature/Fix Branch 
 
+permissions:
+  contents: write # for pushing the code back to your desired branch
+  
 on:
   push:
     branches:
-      - 'hotfix/**'
-      - 'feature/**'
-      - 'fix/**'
+      - 'main'
+      - 'dev'
+
 jobs:
-  build:
+  create-branch:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run lint
-        run: npm run lint
-
-      - name: Run tests
-        run: npm test
-
-  merge:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push'
-
-    steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Set up Git
         run: |
-          git config --global user.email "shahsyed216@gmail.com"
-          git config --global user.name "ShAhSyedG"
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
       
-      - name: Check git remote
+      - name: Determine Branch Type and Create Branch
         run: |
-          git remote -v
-
-      - name: Set git remote URL
-        run: |
-          git remote set-url origin https://ShAhSyedG:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/ShAhSyedG/upwork-client.git
-      
-      - name: Merge push branch into main
-        run: |
-          git checkout main
-          git merge --no-ff ${{ github.ref }}
-          git push origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-
-      - name: Merge push branch into dev
-        run: |
-          git checkout dev
-          git merge --no-ff ${{ github.ref }}
-          git push origin dev
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          BRANCH_TYPE=$(echo "$COMMIT_MSG" | awk '{print tolower($1)}')
+          BRANCH_NAME=$(echo "$COMMIT_MSG" | sed 's/[^a-zA-Z0-9]/-/g' | awk '{print tolower($0)}')
+          NEW_BRANCH="${BRANCH_TYPE}/${BRANCH_NAME}-${{ github.sha }}"
+          git checkout -b $NEW_BRANCH
+          git push origin $NEW_BRANCH
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}

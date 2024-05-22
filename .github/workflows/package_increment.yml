@@ -1,0 +1,71 @@
+name: Increment Version on Merge
+
+permissions:
+  contents: write # for pushing the code back to your desired branch
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'staging'
+
+      
+jobs:
+  increment-version:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Increment version
+      id: increment
+      run: |
+        # Extract the current version
+        current_version=$(node -p "require('./package.json').version")
+        IFS='.' read -r -a version_parts <<< "$current_version"
+
+        case "$bump_type" in
+          major)
+            version_parts[0]=$((version_parts[0] + 1))
+            version_parts[1]=0
+            version_parts[2]=0
+            ;;
+          minor)
+            version_parts[1]=$((version_parts[1] + 1))
+            version_parts[2]=0
+            ;;
+          patch)
+            version_parts[2]=$((version_parts[2] + 1))
+            ;;
+        esac
+        
+        new_version="${version_parts[0]}.${version_parts[1]}.${version_parts[2]}"
+        echo "New version: $new_version"
+        jq ".version = \"$new_version\"" package.json > package.tmp.json && mv package.tmp.json package.json
+        echo "::set-output name=new_version::$new_version"        
+
+    - name: Commit changes
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add package.json package-lock.json
+        git commit -m "Bump version to $new_version"
+
+    - name: Push changes
+      uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        branch: main
+
+
+#adding comments for testing currently paackage is incremented to version 0.10.16, so i am making a minor change it will increment last decimail number.
+  
