@@ -6,7 +6,7 @@ permissions:
 on:
   push:
     branches:
-      - main
+      - dev
       - staging
 
       
@@ -67,9 +67,3 @@ jobs:
         git push main
       env:
         GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-
-
-
-
-
-        
