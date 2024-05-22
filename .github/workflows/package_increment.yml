@@ -66,10 +66,3 @@ jobs:
         github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         branch: main
   
-    - name: Push merged main back to dev
-      run: |
-        git checkout dev
-        git merge main
-        git push origin dev
-      env:
-        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
