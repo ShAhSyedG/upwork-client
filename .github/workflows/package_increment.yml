@@ -1,0 +1,53 @@
+name: Increment Version on Merge
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+
+jobs:
+  increment-version:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Increment version
+      id: increment
+      run: |
+        # Extract the current version
+        current_version=$(node -p "require('./package.json').version")
+        # Split the version number into its components
+        IFS='.' read -r -a version_parts <<< "$current_version"
+        # Increment the patch version (you can modify this to increment minor or major)
+        version_parts[2]=$((version_parts[2] + 1))
+        # Join the version parts back into a single string
+        new_version="${version_parts[0]}.${version_parts[1]}.${version_parts[2]}"
+        echo "New version: $new_version"
+        # Update the package.json with the new version
+        jq ".version = \"$new_version\"" package.json > package.tmp.json && mv package.tmp.json package.json
+        # Set the new version as an output
+        echo "::set-output name=new_version::$new_version"
+
+    - name: Commit changes
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add package.json
+        git commit -m "chore: bump version to ${{ steps.increment.outputs.new_version }}"
+
+    - name: Push changes
+      uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
