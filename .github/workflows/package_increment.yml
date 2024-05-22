@@ -2,13 +2,14 @@ name: Increment Version on Merge
 
 permissions:
   contents: write # for pushing the code back to your desired branch
-  
+
 on:
   push:
     branches:
       - main
       - staging
 
+      
 jobs:
   increment-version:
     runs-on: ubuntu-latest
