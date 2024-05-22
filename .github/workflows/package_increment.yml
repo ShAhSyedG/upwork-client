@@ -1,5 +1,8 @@
 name: Increment Version on Merge
 
+permissions:
+  contents: write # for pushing the code back to your desired branch
+  
 on:
   push:
     branches:
